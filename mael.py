@@ -6,7 +6,7 @@ import asyncio
 from datetime import datetime
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║   MAEL — bot de atendimento e regras                          ║
+# ║   MAEL — bot oficial do servidor SHARP                        ║
 # ║   Inspirado no Renan, mas com a energia invertida: onde o     ║
 # ║   Renan é frio e econômico com as palavras, o Mael é agitado  ║
 # ║   — fala rápido, usa bastante exclamação e emoji — mas        ║
@@ -24,6 +24,8 @@ bot = commands.Bot(command_prefix=".", intents=intents, help_command=None)
 # CONFIGURAÇÃO — preencha com os valores reais do seu servidor
 # ══════════════════════════════════════════════════════════════════════
 TOKEN = os.getenv("TOKEN")
+
+NOME_SERVIDOR = "SHARP"  # usado na branding dos embeds, rodapés e status do Mael
 
 COR_MAEL = 0xFF6A00  # laranja elétrico — cor usada em todos os embeds do Mael
 
@@ -210,7 +212,7 @@ async def _configurar_regras() -> None:
     )
     for titulo, texto in REGRAS_SHARP:
         embed.add_field(name=titulo, value=texto, inline=False)
-    embed.set_footer(text="⚡ Mael • Código de Guerra da SHARP")
+    embed.set_footer(text=f"⚡ Mael • Código de Guerra da {NOME_SERVIDOR}")
 
     mensagem_id = _carregar_regras_msg_id()
     if mensagem_id:
@@ -401,7 +403,7 @@ async def _abrir_ticket(interaction: discord.Interaction) -> None:
         ),
         color=COR_MAEL,
     )
-    embed.set_footer(text="⚡ Mael • clica em Fechar Ticket quando resolver")
+    embed.set_footer(text=f"⚡ Mael • Servidor {NOME_SERVIDOR} • clica em Fechar Ticket quando resolver")
 
     mencoes_staff = " ".join(cargo.mention for cargo in cargos_staff)
     await canal_ticket.send(
@@ -453,7 +455,7 @@ async def _configurar_painel_ticket() -> None:
         return
 
     embed = discord.Embed(
-        title="🎫 Fala com a Staff!",
+        title=f"🎫 Fala com a Staff da {NOME_SERVIDOR}!",
         description=(
             "PRECISA DE UMA MÃOZINHA?! 🙋‍♂️⚡ Clica no botão aí embaixo e um canal "
             "privado nasce na hora, só seu — só você e a staff enxergam!\n\n"
@@ -461,7 +463,7 @@ async def _configurar_painel_ticket() -> None:
         ),
         color=COR_MAEL,
     )
-    embed.set_footer(text="⚡ Mael • sempre no gás pra te ajudar")
+    embed.set_footer(text=f"⚡ Mael • Servidor {NOME_SERVIDOR}")
 
     dados = _carregar_dados_tickets()
     try:
@@ -482,10 +484,12 @@ async def _configurar_painel_ticket() -> None:
 
 @bot.event
 async def on_ready():
-    print(f"[Mael] conectado como {bot.user} ({bot.user.id}) ⚡")
+    print(f"[Mael] conectado como {bot.user} ({bot.user.id}) — bot oficial da {NOME_SERVIDOR} ⚡")
     try:
         await bot.change_presence(
-            activity=discord.Activity(type=discord.ActivityType.watching, name="a SHARP de perto ⚡")
+            activity=discord.Activity(
+                type=discord.ActivityType.watching, name=f"a {NOME_SERVIDOR} de perto ⚡"
+            )
         )
     except discord.HTTPException:
         pass
